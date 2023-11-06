@@ -30,7 +30,7 @@ class ResNetSeries(nn.Module):
             checkpoint = torch.load('detco_200ep.pth', map_location="cpu")
             model.load_state_dict(checkpoint['state_dict'], strict=False)
         else:
-            raise NotImplementedError
+            model = resnet50(pretrained=False, num_classes=4)
 
         self.conv1 = model.conv1
         self.bn1 = model.bn1

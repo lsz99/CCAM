@@ -9,7 +9,7 @@ import matplotlib
 matplotlib.use('Agg')
 from torchvision import transforms
 from tensorboardX import SummaryWriter
-
+from tools.myTransforms import transforms_dla
 from torch.utils.data import DataLoader
 
 from utils import *
@@ -108,15 +108,16 @@ if __name__ == '__main__':
     # data augmentation
     train_transform = transforms.Compose([
         # the input size is decided by the adopted datasets
-        transforms.Resize(size=(256, 128)),
+        # transforms.Resize(size=(256, 128)),
         transforms.RandomHorizontalFlip(),
-        # transforms.RandomCrop(size=(448, 448)),
+        transforms.CenterCrop(size=(448, 448)),
         transforms.ToTensor(),
-        transforms.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))
+        transforms_dla()
+        # transforms.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))
     ])
 
 
-    train_dataset = CUSTOM_Dataset(args.data_dir, train_transform)
+    train_dataset = tr_Dataset(args.data_dir, train_transform)
 
     train_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=args.num_workers, shuffle=True)
 
@@ -149,7 +150,7 @@ if __name__ == '__main__':
     log_func()
 
     try:
-        use_gpu = os.environ['CUDA_VISIBLE_DEVICES']
+        use_gpu = os.environ['0,1,2,3']
     except KeyError:
         use_gpu = '0'
 
